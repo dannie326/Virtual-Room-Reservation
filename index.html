@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>HTML5 Hotel Room Booking (JavaScript, PHP, MySQL)</title>
+
+    <style type="text/css">
+        p,
+        body,
+        td {
+            font-family: Tahoma, Arial, Helvetica, sans-serif;
+            font-size: 10pt;
+        }
+        
+        body {
+            padding: 0px;
+            margin: 0px;
+            background-color: #ffffff;
+        }
+        
+        a {
+            color: #1155a3;
+        }
+        
+        .space {
+            margin: 10px 0px 10px 0px;
+        }
+        
+        .header {
+            background: #003267;
+            background: linear-gradient(to right, #011329 0%, #00639e 44%, #011329 100%);
+            padding: 20px 10px;
+            color: white;
+            box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.75);
+        }
+        
+        .header a {
+            color: white;
+        }
+        
+        .header h1 a {
+            text-decoration: none;
+        }
+        
+        .header h1 {
+            padding: 0px;
+            margin: 0px;
+        }
+        
+        .main {
+            padding: 10px;
+            margin-top: 10px;
+        }
+    </style>
+
+    <!-- DayPilot library -->
+    <script src="js/daypilot/daypilot-all.min.js"></script>
+
+    <link type="text/css" rel="stylesheet" href="icons/style.css" />
+
+    <style type="text/css">
+        body,
+        input,
+        button,
+        select {
+            font-size: 14px;
+        }
+        
+        select {
+            padding: 5px;
+        }
+        
+        .toolbar {
+            margin: 10px 0px;
+        }
+        
+        .toolbar button {
+            padding: 5px 15px;
+        }
+        
+        .icon {
+            font-size: 14px;
+            text-align: center;
+            line-height: 14px;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+        
+        .toolbar-separator {
+            width: 1px;
+            height: 28px;
+            /*content: '&nbsp;';*/
+            display: inline-block;
+            box-sizing: border-box;
+            background-color: #ccc;
+            margin-bottom: -8px;
+            margin-left: 15px;
+            margin-right: 15px;
+        }
+        
+        .scheduler_default_rowheader_inner {
+            border-right: 1px solid #ccc;
+        }
+        
+        .scheduler_default_rowheadercol2 {
+            background: White;
+        }
+        
+        .scheduler_default_rowheadercol2 .scheduler_default_rowheader_inner {
+            top: 2px;
+            bottom: 2px;
+            left: 2px;
+            background-color: transparent;
+            border-left: 5px solid #38761d;
+            /* green */
+            border-right: 0px none;
+        }
+        
+        .status_dirty.scheduler_default_rowheadercol2 .scheduler_default_rowheader_inner {
+            border-left: 5px solid #cc0000;
+            /* red */
+        }
+        
+        .status_cleanup.scheduler_default_rowheadercol2 .scheduler_default_rowheader_inner {
+            border-left: 5px solid #e69138;
+            /* orange */
+        }
+        
+        .area-menu {
+            background-image: url("data:image/svg+xml,%3Csvg width='10' height='10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 0.5 1.5 L 5 6.5 L 9.5 1.5' style='fill:none;stroke:%23999999;stroke-width:2;stroke-linejoin:round;stroke-linecap:butt' /%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center center;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            border-radius: 3px;
+            opacity: 0.8;
+            cursor: pointer;
+        }
+        
+        .area-menu:hover {
+            opacity: 1;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="header">
+        <h1><a href='https://code.daypilot.org/27453/html5-hotel-room-booking-javascript-php'>HTML5 Hotel Room Booking (JavaScript, PHP, MySQL)</a></h1>
+        <div><a href="https://javascript.daypilot.org/">DayPilot for JavaScript</a> - HTML5 Calendar/Scheduling Components for JavaScript/Angular/React/Vue</div>
+    </div>
+
+    <div class="main">
+        <div style="width:220px; float:left;">
+            <div id="nav"></div>
+        </div>
+
+        <div style="margin-left: 220px;">
+            <!--
+            <div class="toolbar">
+
+                Room filter:
+                <select id="filter">
+                <option value="0">All</option>
+                <option value="1">Single</option>
+                <option value="2">Double</option>
+                <option value="4">Family</option>
+            </select> &nbsp;&nbsp;
+
+                <button id="addroom">Add Room</button>
+
+                <div class="toolbar-separator"></div>
+
+                Time range:
+                <select id="timerange">
+                <option value="week">Week</option>
+                <option value="month" selected>Month</option>
+            </select>
+                <div class="toolbar-separator"></div>
+                <label for="autocellwidth"><input type="checkbox" id="autocellwidth">Auto Cell Width</label>
+
+            </div>
+            -->
+            <div id="dp"></div>
+
+        </div>
+
+    </div>
+
+    <script type="text/javascript">
+        var nav = new DayPilot.Navigator("nav");
+        nav.selectMode = "month";
+        nav.showMonths = 3;
+        nav.skipMonths = 3;
+        nav.onTimeRangeSelected = function(args) {
+            loadTimeline(args.start);
+            loadReservations();
+        };
+        nav.init();
+    </script>
+
+    <script>
+        var dp = new DayPilot.Scheduler("dp");
+
+        // view
+        dp.startDate = new DayPilot.Date("2020-12-24"); // or just dp.startDate = "2013-03-25";
+        dp.cellGroupBy = "Month";
+        dp.days = 7;
+        dp.cellDuration = 1440; // one day
+
+        dp.timeHeaders = [{
+            groupBy: "Day"
+        }, {
+            groupBy: "Cell"
+        }];
+        dp.scale = "Hour";
+
+        // bubble, sync loading
+        // see also DayPilot.Event.data.staticBubbleHTML property
+        dp.bubble = new DayPilot.Bubble();
+
+        dp.contextMenu = new DayPilot.Menu({
+            items: [{
+                text: "Show event ID",
+                onclick: function() {
+                    alert("Event value: " + this.source.value());
+                }
+            }, {
+                text: "Show event text",
+                onclick: function() {
+                    alert("Event text: " + this.source.text());
+                }
+            }, {
+                text: "Show event start",
+                onclick: function() {
+                    alert("Event start: " + this.source.start().toStringSortable());
+                }
+            }, ]
+        });
+        /*
+        dp.treeEnabled = true;
+        dp.rowHeaderWidth = 200;
+        */
+        dp.eventDeleteHandling = "Update";
+        dp.resources = [{
+            name: "Room 1",
+            id: "A"
+        }, {
+            name: "Room 2",
+            id: "B"
+        }, {
+            name: "Room 3",
+            id: "C"
+        }, ];
+
+        // generate and load events
+        for (var i = 0; i < 1; i++) {
+            var duration = Math.floor(Math.random() * 6) + 1; // 1 to 6
+            var start = Math.floor(Math.random() * 6) - 3; // -3 to 3
+
+            var e = new DayPilot.Event({
+                start: new DayPilot.Date("2013-03-25T00:00:00").addHours(start),
+                end: new DayPilot.Date("2013-03-25T12:00:00").addHours(start).addHours(duration),
+                id: DayPilot.guid(),
+                resource: "B",
+                text: "Event"
+                    /*,
+                        bubbleHtml: "Testing bubble"*/
+            });
+            dp.events.add(e);
+        }
+
+        dp.eventHoverHandling = "Bubble";
+
+        dp.onBeforeEventRender = function(args) {
+            args.e.bubbleHtml = args.e.start + " " + args.e.end;
+        };
+
+        dp.eventMovingStartEndEnabled = true;
+        dp.eventResizingStartEndEnabled = true;
+        dp.timeRangeSelectingStartEndEnabled = true;
+
+        // event moving
+        dp.onEventMoved = function(args) {
+            dp.message("Moved: " + args.e.text());
+        };
+
+        // event resizing
+        dp.onEventResized = function(args) {
+            dp.message("Resized: " + args.e.text());
+        };
+
+        // event creating
+        dp.onTimeRangeSelected = function(args) {
+
+            var form = [{
+                name: "Event Name",
+                id: "name"
+            }, {
+                name: "Host Name",
+                id: "host"
+            }, {
+                name: "Email Address",
+                id: "email",
+                dataFormat: "/\S+@+\.\S+/"
+            }];
+            DayPilot.Modal.form(form).then(function(margs) {
+                if (!margs.canceled) {
+                    dp.clearSelection();
+                    var e = new DayPilot.Event({
+                        start: args.start.addMinutes(-args.start.getMinutes()),
+                        end: args.end.addHours(1).addMinutes(-args.end.getMinutes()),
+                        id: DayPilot.guid(),
+                        resource: args.resource,
+                        text: margs.result.name
+                    });
+                    dp.events.add(e);
+                    dp.message("Created");
+                } else {
+                    return;
+                }
+            });
+        };
+
+        dp.onEventClicked = function(args) {
+            DayPilot.Modal.alert(args.e.data.text);
+        };
+
+        dp.onTimeHeaderClick = function(args) {
+            alert("clicked: " + args.header.start);
+        };
+
+        dp.snapToGrid = false;
+        dp.useEventBoxes = "Never";
+
+        dp.onEventMoving = function(args) {
+            var offset = args.start.getMinutes() % 60;
+            if (offset) {
+                args.start = args.start.addMinutes(-offset);
+                args.end = args.end.addMinutes(-offset);
+            }
+
+            args.left.enabled = true;
+            args.left.html = args.start.toString("h:mm tt");
+        };
+
+        dp.cellWidth = 60;
+
+
+        dp.init();
+
+        dp.scrollTo("2020-12-24T16:00:00");
+    </script>
+
+
+</body>
+
+</html>
