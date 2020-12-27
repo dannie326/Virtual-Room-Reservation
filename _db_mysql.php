@@ -1,9 +1,9 @@
 <?php
 $host = "127.0.0.1";
 $port = 3306;
-$username = "username";
-$password = "password";
-$database = "hotel";
+$username = "root";
+$password = "";
+$database = "reservation";
 
 $db = new PDO("mysql:host=$host;port=$port",
                $username,
