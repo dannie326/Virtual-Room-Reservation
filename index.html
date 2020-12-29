@@ -13,21 +13,21 @@
             font-family: Tahoma, Arial, Helvetica, sans-serif;
             font-size: 10pt;
         }
-
+        
         body {
             padding: 0px;
             margin: 0px;
             background-color: #ffffff;
         }
-
+        
         a {
             color: #1155a3;
         }
-
+        
         .space {
             margin: 10px 0px 10px 0px;
         }
-
+        
         .header {
             background: #003267;
             background: linear-gradient(to right, #011329 0%, #00639e 44%, #011329 100%);
@@ -35,20 +35,20 @@
             color: white;
             box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.75);
         }
-
+        
         .header a {
             color: white;
         }
-
+        
         .header h1 a {
             text-decoration: none;
         }
-
+        
         .header h1 {
             padding: 0px;
             margin: 0px;
         }
-
+        
         .main {
             padding: 10px;
             margin-top: 10px;
@@ -67,19 +67,19 @@
         select {
             font-size: 14px;
         }
-
+        
         select {
             padding: 5px;
         }
-
+        
         .toolbar {
             margin: 10px 0px;
         }
-
+        
         .toolbar button {
             padding: 5px 15px;
         }
-
+        
         .icon {
             font-size: 14px;
             text-align: center;
@@ -87,7 +87,7 @@
             vertical-align: middle;
             cursor: pointer;
         }
-
+        
         .toolbar-separator {
             width: 1px;
             height: 28px;
@@ -99,15 +99,15 @@
             margin-left: 15px;
             margin-right: 15px;
         }
-
+        
         .scheduler_default_rowheader_inner {
             border-right: 1px solid #ccc;
         }
-
+        
         .scheduler_default_rowheadercol2 {
             background: White;
         }
-
+        
         .scheduler_default_rowheadercol2 .scheduler_default_rowheader_inner {
             top: 2px;
             bottom: 2px;
@@ -117,17 +117,17 @@
             /* green */
             border-right: 0px none;
         }
-
+        
         .status_dirty.scheduler_default_rowheadercol2 .scheduler_default_rowheader_inner {
             border-left: 5px solid #cc0000;
             /* red */
         }
-
+        
         .status_cleanup.scheduler_default_rowheadercol2 .scheduler_default_rowheader_inner {
             border-left: 5px solid #e69138;
             /* orange */
         }
-
+        
         .area-menu {
             background-image: url("data:image/svg+xml,%3Csvg width='10' height='10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 0.5 1.5 L 5 6.5 L 9.5 1.5' style='fill:none;stroke:%23999999;stroke-width:2;stroke-linejoin:round;stroke-linecap:butt' /%3E%3C/svg%3E");
             background-repeat: no-repeat;
@@ -138,7 +138,7 @@
             opacity: 0.8;
             cursor: pointer;
         }
-
+        
         .area-menu:hover {
             opacity: 1;
         }
@@ -148,19 +148,19 @@
 
 <body>
     <div class="header">
-        <h1><a></a>Virtual Room Reservation</a></h1>
-        <div><a href="https://javascript.daypilot.org/">DayPilot for JavaScript</a> - HTML5 Calendar/Scheduling
-            Components for JavaScript/Angular/React/Vue</div>
+        <h1>
+            <a></a>Virtual Room Reservation</a>
+        </h1>
+        <div><a href="https://javascript.daypilot.org/">DayPilot for JavaScript</a> - HTML5 Calendar/Scheduling Components for JavaScript/Angular/React/Vue</div>
     </div>
 
     <div class="main">
-        <!--
+
         <div style="width:220px; float:left;">
             <div id="nav"></div>
         </div>
-        -->
-        <!--<div style="margin-left: 220px;">-->
-        <div>
+
+        <div style="margin-left: 220px;">
             <!--
             <div class="toolbar">
 
@@ -199,342 +199,7 @@
 
     <pre id="content" style="white-space: pre-wrap;"></pre>
 
-    <!-- Nav setup -->
-    <script type="text/javascript">
-        var nav = new DayPilot.Navigator("nav");
-        nav.selectMode = "month";
-        nav.showMonths = 3;
-        nav.skipMonths = 3;
-        nav.onTimeRangeSelected = function (args) {
-            loadTimeline(args.start);
-            loadReservations();
-        };
-        nav.init();
-    </script>
-
-    <!-- Scheduler setup -->
-    <script>
-        var dp = new DayPilot.Scheduler("dp");
-
-        // view
-        dp.startDate = DayPilot.Date.today(); // or just dp.startDate = "2013-03-25";
-        dp.cellGroupBy = "Month";
-        dp.days = 7;
-        dp.cellDuration = 1440; // one day
-
-        dp.timeHeaders = [{
-            groupBy: "Day"
-        }, {
-            groupBy: "Cell"
-        }];
-        dp.scale = "Hour";
-
-        // bubble, sync loading
-        // see also DayPilot.Event.data.staticBubbleHTML property
-        dp.bubble = new DayPilot.Bubble();
-
-        dp.contextMenu = new DayPilot.Menu({
-            items: [{
-                text: "Show event ID",
-                onclick: function () {
-                    alert("Event value: " + this.source.value());
-                }
-            }, {
-                text: "Show event text",
-                onclick: function () {
-                    alert("Event text: " + this.source.text());
-                }
-            }, {
-                text: "Show event start",
-                onclick: function () {
-                    alert("Event start: " + this.source.start().toStringSortable());
-                }
-            }, {
-                text: "Event Detail",
-                onclick: function () {
-                    //DayPilot.Modal.alert(this.source.);
-                }
-            },]
-        });
-
-        function gResource(summary, location, description, start, end, recurrence, attendees, reminders) {
-            var gR = {
-                'summary': summary,
-                'location': location,
-                'description': description,
-                'start': start,
-                'end': end,
-                'recurrence': recurrence,
-                'attendees': attendees,
-                'reminders': reminders
-            };
-
-            return gR;
-        };
-
-        function dResource(params) {
-            var dR = {
-                'event_name': params.event,
-                'description': params.description,
-                'host_name': params.host,
-                'host_email': params.email,
-                'room': params.room,
-                'start': params.start,
-                'end': params.end,
-                'member_count': params.count,
-                'attendees': params.attendees
-            };
-
-            return dR;
-        };
-        function API_D2G(dR) {
-            var attendees = [];
-            var email = { 'email': dR.host_email };
-            attendees.push(email);
-            for(var i = 0;i<dR.member_count-1;i++)
-            {
-                var email = { 'email': dR.attendees[i].email }
-                attendees.push(email);
-            }
-            console.log(attendees);
-            var gR = {
-                'summary': dR.event_name,
-                'location': dR.room,
-                'description': dR.description,
-                'start': {
-                    'dateTime': dR.start.value+'+08:00',
-                    'timeZone': 'Asia/Taipei'
-                },
-                'end': {
-                    'dateTime': dR.end.value+'+08:00',
-                    'timeZone': 'Asia/Taipei'
-                },
-                'attendees': attendees,
-                'reminders': {
-                    'useDefault': false,
-                    'overrides': [
-                        { 'method': 'email', 'minutes': 24 * 60 },
-                        { 'method': 'popup', 'minutes': 10 }
-                    ]
-                }
-            };
-
-            return gR;
-        }
-        function API_G2D(gR) {
-
-        }
-
-        function GoogleInsert(event) {
-            var request = gapi.client.calendar.events.insert({
-                'calendarId': 'primary',
-                'resource': event,
-                'sendUpdates': "all"
-            });
-            console.log(request);
-            request.execute(function (event) {
-                appendPre('Event created: ' + event.htmlLink);
-            });
-        }
-        dp.eventDeleteHandling = "Update";
-
-        dp.resources = [{
-            name: "Room 1",
-            id: "A"
-        }, {
-            name: "Room 2",
-            id: "B"
-        }, {
-            name: "Room 3",
-            id: "C"
-        },];
-
-        // generate and load events
-        for (var i = 0; i < 1; i++) {
-            var duration = Math.floor(Math.random() * 6) + 1; // 1 to 6
-            var start = Math.floor(Math.random() * 6) - 3; // -3 to 3
-            var e = new DayPilot.Event({
-                start: new DayPilot.Date("2013-03-25T00:00:00").addHours(start),
-                end: new DayPilot.Date("2013-03-25T12:00:00").addHours(start).addHours(duration),
-                id: DayPilot.guid(),
-                resource: "B",
-                text: "Event"
-                /*,
-                    bubbleHtml: "Testing bubble"*/
-            });
-            dp.events.add(e);
-        }
-
-        dp.eventHoverHandling = "Bubble";
-        //dp.eventClickHandling = "Edit";
-        dp.onBeforeEventRender = function (args) {
-            args.e.bubbleHtml = args.e.start + " " + args.e.end;
-        };
-
-        dp.eventMovingStartEndEnabled = true;
-        dp.eventResizingStartEndEnabled = true;
-        dp.timeRangeSelectingStartEndEnabled = true;
-
-        // event moving
-        dp.onEventMoved = function (args) {
-            dp.message("Moved: " + args.e.text());
-        };
-
-        // event resizing
-        dp.onEventResized = function (args) {
-            dp.message("Resized: " + args.e.text());
-        };
-
-        // event creating
-        dp.onTimeRangeSelected = function (args) {
-            var form = [{
-                name: "Event Name",
-                id: "name"
-            }, {
-                name: "Host Name",
-                id: "host"
-            }, {
-                name: "Email Address",
-                id: "email"
-            }, {
-                name: "Description",
-                id: "des"
-            },{
-                name: "Number of participants",
-                id: "count",
-                options: [
-                    { name: "1", id: 1 },
-                    { name: "2", id: 2 },
-                    { name: "3", id: 3 },
-                    { name: "4", id: 4 },
-                    { name: "5", id: 5 },
-                ]
-            }];
-            DayPilot.Modal.form(form).then(function (margs) {
-                if (!margs.canceled) {
-                    dp.clearSelection();
-                    if (margs.result.count > 1) {
-                        //console.log(margs.result.Count);
-                        var c = 1;
-                        var f = [];
-                        for (var i = 1; i < margs.result.count * 2 - 1; i += 2) {
-                            var nameform =
-                            {
-                                name: "Member " + (Math.ceil(i / 2)),
-                                id: i
-                            };
-                            var emailform =
-                            {
-                                name: "Email",
-                                id: i + 1
-                            };
-                            f.push(nameform);
-                            f.push(emailform);
-                        }
-
-                        DayPilot.Modal.form(f).then(function (nargs) {
-                            if (!nargs.canceled) {
-                                //console.log(nargs.result);
-                                var attendences = [];
-                                for (var i = 1; i < margs.result.count * 2 - 1; i += 2) {
-                                    var attendence =
-                                    {
-                                        name: nargs.result[i],
-                                        email: nargs.result[i + 1]
-                                    }
-                                    attendences.push(attendence);
-                                }
-                                var d = new dResource({
-                                    event: margs.result.name,
-                                    host: margs.result.host,
-                                    email: margs.result.email,
-                                    description: margs.result.des,
-                                    room: args.resource,
-                                    start: args.start.addMinutes(-args.start.getMinutes()),
-                                    end: args.end.addHours(1).addMinutes(-args.end.getMinutes()),
-                                    count: margs.result.count,
-                                    attendees: attendences
-                                });
-                                console.log(d);
-                                var e = new DayPilot.Event({
-                                    start: d.start,
-                                    end: d.end,
-                                    id: DayPilot.guid(),
-                                    resource: d.room,
-                                    text: d.event_name
-                                });
-                                dp.events.add(e);
-                                console.log(e.data);
-                                dp.message("Created");
-                                GoogleInsert(API_D2G(d));
-                            }
-                            else {
-                                return;
-                            }
-                        });
-                    }
-                    else {
-                        var d = new dResource({
-                            event: margs.result.name,
-                            host: margs.result.host,
-                            email: margs.result.email,
-                            description: margs.result.des,
-                            room: args.resource,
-                            start: args.start.addMinutes(-args.start.getMinutes()),
-                            end: args.end.addHours(1).addMinutes(-args.end.getMinutes()),
-                            count: margs.result.Count,
-                            attendees: null
-                        });
-                        var e = new DayPilot.Event({
-                            start: d.start,
-                            end: d.end,
-                            id: DayPilot.guid(),
-                            resource: d.room,
-                            text: d.event_name
-                        });
-                        console.log(d);
-                        dp.events.add(e);
-                        console.log(e.data);
-                        dp.message("Created");
-                        GoogleInsert(API_D2G(d));
-                    }
-                }
-                else {
-                    return;
-                }
-            });
-        };
-
-        dp.onEventClicked = function (args) {
-            DayPilot.Modal.alert(args.e.data.text);
-        };
-
-        dp.onTimeHeaderClick = function (args) {
-            alert("clicked: " + args.header.start);
-        };
-
-        dp.snapToGrid = false;
-        dp.useEventBoxes = "Never";
-
-        dp.onEventMoving = function (args) {
-            var offset = args.start.getMinutes() % 60;
-            if (offset) {
-                args.start = args.start.addMinutes(-offset);
-                args.end = args.end.addMinutes(-offset);
-            }
-
-            args.left.enabled = true;
-            args.left.html = args.start.toString("h:mm tt");
-        };
-
-        dp.cellWidth = 60;
-
-
-        dp.init();
-
-        dp.scrollTo(DayPilot.Date.today());
-    </script>
-
+    <!-- Google Calendar API-->
     <script type="text/javascript">
         // Client ID and API key from the Developer Console
         var CLIENT_ID = '565165026588-8j0s17d7c2u6iisdljnkja4728bjnuus.apps.googleusercontent.com';
@@ -567,7 +232,7 @@
                 clientId: CLIENT_ID,
                 discoveryDocs: DISCOVERY_DOCS,
                 scope: SCOPES
-            }).then(function () {
+            }).then(function() {
                 // Listen for sign-in state changes.
                 gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
 
@@ -575,7 +240,7 @@
                 updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
                 authorizeButton.onclick = handleAuthClick;
                 signoutButton.onclick = handleSignoutClick;
-            }, function (error) {
+            }, function(error) {
                 appendPre(JSON.stringify(error, null, 2));
             });
         }
@@ -588,7 +253,8 @@
             if (isSignedIn) {
                 authorizeButton.style.display = 'none';
                 signoutButton.style.display = 'block';
-                listUpcomingEvents();
+                EventLoad(dp.startDate);
+                //listUpcomingEvents();
             } else {
                 authorizeButton.style.display = 'block';
                 signoutButton.style.display = 'none';
@@ -627,7 +293,6 @@
          * appropriate message is printed.
          */
         function listUpcomingEvents() {
-            console.log("list");
             gapi.client.calendar.events.list({
                 'calendarId': 'primary',
                 'timeMin': (new Date()).toISOString(),
@@ -635,7 +300,7 @@
                 'singleEvents': true,
                 'maxResults': 10,
                 'orderBy': 'startTime'
-            }).then(function (response) {
+            }).then(function(response) {
                 var events = response.result.items;
                 appendPre('Upcoming events:');
 
@@ -653,12 +318,546 @@
                 }
             });
         }
-
     </script>
 
-    <script async defer src="https://apis.google.com/js/api.js" onload="this.onload=function(){};handleClientLoad()"
-        onreadystatechange="if (this.readyState === 'complete') this.onload()">
-        </script>
+    <!-- API Method -->
+    <script>
+        /**
+         * Google Calendar data structure
+         */
+        function gResource(summary, location, description, start, end, recurrence, attendees, reminders) {
+            var gR = {
+                'summary': summary,
+                'location': location,
+                'description': description,
+                'start': start,
+                'end': end,
+                'recurrence': recurrence,
+                'attendees': attendees,
+                'reminders': reminders
+            };
+
+            return gR;
+        };
+        /**
+         * Local Calendar data structure
+         */
+        function dResource(params) {
+            var dR = {
+                'event_name': params.event,
+                'description': params.description,
+                'host_name': params.host,
+                'host_email': params.email,
+                'room': params.room,
+                'start': params.start,
+                'end': params.end,
+                'member_count': params.count,
+                'attendees': params.attendees
+            };
+
+            return dR;
+        };
+        /**
+         * Method transfer local data type to google data type
+         * @param dR local data type
+         */
+        function API_D2G(dR) {
+            var attendees = [];
+            var attendee = {
+                'displayName': dR.host_name,
+                'email': dR.host_email
+            }
+            attendees.push(attendee);
+            for (var i = 0; i < dR.member_count - 1; i++) {
+                var attendee = {
+                    'displayName': dR.attendees[i].name,
+                    'email': dR.attendees[i].email
+                }
+                attendees.push(attendee);
+            }
+            var gR = {
+                'summary': dR.event_name,
+                'location': dR.room,
+                'description': dR.description,
+                'start': {
+                    'dateTime': dR.start.value,
+                    'timeZone': 'Asia/Taipei'
+                },
+                'end': {
+                    'dateTime': dR.end.value,
+                    'timeZone': 'Asia/Taipei'
+                },
+                'attendees': attendees,
+                'reminders': {
+                    'useDefault': false,
+                    'overrides': [{
+                        'method': 'email',
+                        'minutes': 24 * 60
+                    }, {
+                        'method': 'popup',
+                        'minutes': 10
+                    }]
+                }
+            };
+
+            return gR;
+        }
+        /**
+         * Method transfer google data type to DayPilot.Event data type
+         * @param gR google data type
+         */
+        function API_G2E(gR) {
+            var event = new DayPilot.Event({
+                start: new DayPilot.Date(gR.start.dateTime).addHours(TimeZone),
+                end: new DayPilot.Date(gR.end.dateTime).addHours(TimeZone),
+                id: gR.id,
+                resource: gR.location,
+                text: gR.summary
+            });
+            return event;
+        }
+
+        function GoogleInsert(event) {
+            var request = gapi.client.calendar.events.insert({
+                'calendarId': 'primary',
+                'resource': event,
+                'sendUpdates': "all"
+            });
+            return request;
+        }
+
+        function GoogleDelete(eventID) {
+            var request = gapi.client.calendar.events.delete({
+                'calendarId': 'primary',
+                'eventId': eventID,
+                'sendUpdates': "all"
+            });
+            return request;
+        }
+
+        function GoogleGet(eventID) {
+            var request = gapi.client.calendar.events.get({
+                'calendarId': 'primary',
+                'eventId': eventID
+            });
+            return request;
+        }
+
+        function GoogleGetList(today) {
+            var request = gapi.client.calendar.events.list({
+                'calendarId': 'primary',
+                'timeMin': (new Date()).toISOString()
+            });
+            return request;
+        }
+
+        function GoogleUpdate(eventID, new_event) {
+            var request = gapi.client.calendar.events.update({
+                'calendarId': 'primary',
+                'eventId': eventID,
+                'resource': new_event,
+                'sendUpdates': "all"
+            });
+            return request;
+        }
+    </script>
+
+    <!-- Function -->
+    <script>
+        /**
+         * Event Load
+         */
+        function EventLoad(today) {
+            var request_list = GoogleGetList(today);
+            request_list.execute(function(list) {
+                for (var i = 0; i < list.result.items.length; i++) {
+                    var e = API_G2E(list.result.items[i]);
+                    console.log(e);
+                    dp.events.add(e);
+                }
+            });
+        }
+        /**
+         * Event insert
+         */
+        function EventInsert(args) {
+            var form = [{
+                name: "Event Name",
+                id: "event"
+            }, {
+                name: "Host Name",
+                id: "name"
+            }, {
+                name: "Email Address",
+                id: "email"
+            }, {
+                name: "Description",
+                id: "des"
+            }, {
+                name: "Number of participants",
+                id: "count",
+                options: [{
+                    name: "1",
+                    id: 1
+                }, {
+                    name: "2",
+                    id: 2
+                }, {
+                    name: "3",
+                    id: 3
+                }, {
+                    name: "4",
+                    id: 4
+                }, {
+                    name: "5",
+                    id: 5
+                }, ]
+            }];
+            var default_data = {
+                count: 1
+            }
+            DayPilot.Modal.form(form, default_data).then(function(margs) {
+                if (!margs.canceled) {
+                    dp.clearSelection();
+                    if (margs.result.count > 1) {
+                        //console.log(margs.result.Count);
+                        var c = 1;
+                        var f = [];
+                        for (var i = 1; i < margs.result.count * 2 - 1; i += 2) {
+                            var nameform = {
+                                name: "Member " + (Math.ceil(i / 2)),
+                                id: i
+                            };
+                            var emailform = {
+                                name: "Email",
+                                id: i + 1
+                            };
+                            f.push(nameform);
+                            f.push(emailform);
+                        }
+
+                        DayPilot.Modal.form(f).then(function(nargs) {
+                            if (!nargs.canceled) {
+                                //console.log(nargs.result);
+                                var attendences = [];
+                                for (var i = 1; i < margs.result.count * 2 - 1; i += 2) {
+                                    var attendence = {
+                                        name: nargs.result[i],
+                                        email: nargs.result[i + 1]
+                                    }
+                                    attendences.push(attendence);
+                                }
+                                var d = new dResource({
+                                    event: margs.result.event,
+                                    host: margs.result.name,
+                                    email: margs.result.email,
+                                    description: margs.result.des,
+                                    room: args.resource,
+                                    start: args.start.addMinutes(-args.start.getMinutes()),
+                                    end: args.end.addHours(1).addMinutes(-args.end.getMinutes()),
+                                    count: margs.result.count,
+                                    attendees: attendences
+                                });
+                                var request = GoogleInsert(API_D2G(d));
+                                request.execute(function(e) {
+                                    appendPre('Event created: ' + e.id);
+                                    var event = new DayPilot.Event({
+                                        start: d.start,
+                                        end: d.end,
+                                        id: e.id,
+                                        resource: d.room,
+                                        text: d.event_name
+                                    });
+                                    //console.log(event.data);
+                                    dp.events.add(event);
+                                    dp.message("Created");
+                                });
+                            } else {
+                                return;
+                            }
+                        });
+                    } else {
+                        var d = new dResource({
+                            event: margs.result.event,
+                            host: margs.result.name,
+                            email: margs.result.email,
+                            description: margs.result.des,
+                            room: args.resource,
+                            start: args.start.addMinutes(-args.start.getMinutes()),
+                            end: args.end.addHours(1).addMinutes(-args.end.getMinutes()),
+                            count: margs.result.Count,
+                            attendees: null
+                        });
+                        var request = GoogleInsert(API_D2G(d));
+                        request.execute(function(e) {
+                            appendPre('Event created: ' + e.id);
+                            var event = new DayPilot.Event({
+                                start: d.start,
+                                end: d.end,
+                                id: e.id,
+                                resource: d.room,
+                                text: d.event_name
+                            });
+                            //console.log(event.data);
+                            dp.events.add(event);
+                            dp.message("Created");
+                        });
+                    }
+                } else {
+                    return;
+                }
+            });
+        }
+        /**
+         * Event edit
+         */
+        function EventEditDetail(args) {
+            var form = [{
+                name: "Event Name",
+                id: "event"
+            }, {
+                name: "Host Name",
+                id: "name"
+            }, {
+                name: "Email Address",
+                id: "email"
+            }, {
+                name: "Description",
+                id: "des"
+            }];
+            var request_get = GoogleGet(args.data.id);
+            request_get.execute(function(e) {
+                var default_data = {
+                    event: e.summary,
+                    name: e.attendees[0].displayName,
+                    email: e.attendees[0].email,
+                    des: (e.description != null) ? e.description : null
+                };
+                DayPilot.Modal.form(form, default_data).then(function(margs) {
+                    if (!margs.canceled) {
+                        //update google reference
+                        e.summary = margs.result.event;
+                        e.attendees[0].displayName = margs.result.name;
+                        e.attendees[0].email = margs.result.email;
+                        e.description = margs.result.des;
+
+                        var request_update = GoogleUpdate(e.id, e);
+                        request_update.execute(function(new_e) {
+                            //update local reference
+                            var local_e = dp.events.find(args.data.id);
+                            local_e.text(e.summary);
+                            dp.events.update(local_e)
+                            dp.message("Edit");
+                        })
+                    }
+                })
+            });
+        }
+
+        function EventEditTimeOrRoom(args) {
+            //console.log(args.e.data.start.value + "/" + args.newStart.value);
+            if (args.e.data.start.value == args.newStart.value &&
+                args.e.data.end.value == args.newEnd.value && args.e.data.resource == args.newResource) {
+                args.preventDefault();
+                return;
+            }
+
+            var request_get = GoogleGet(args.e.data.id);
+            request_get.execute(function(e) {
+                console.log("get execute");
+                e.start.dateTime = args.newStart.value;
+                e.end.dateTime = args.newEnd.value;
+                e.location = (args.newResource != null) ? args.newResource : e.location;
+                var request_update = GoogleUpdate(e.id, e);
+                request_update.execute(function(new_e) {
+                    //update local reference
+                    dp.message("update time");
+                    console.log("update execute");
+                })
+            });
+        }
+        /**
+         * Event Detail
+         */
+        function EventShowDetail(args) {
+            var request_get = GoogleGet(args.e.data.id);
+            request_get.execute(function(e) {
+                var name = "Event Name: " + e.summary + "\n";
+                var host = "Host Name: " + e.attendees[0].displayName + "\n";
+                var email = "Host Email: " + e.attendees[0].email + "\n";
+                var time = "Time: " + e.start.dateTime + " ~ " + e.end.dateTime + "\n";
+                var room = "Room: " + e.location + "\n";
+                var d = (e.description != null) ? e.description : null;
+                var description = "Description: " + d + "\n";
+
+                var Detail = name + host + email + time + room + description;
+                alert(Detail);
+            });
+        }
+    </script>
+
+    <!-- Nav setup -->
+    <script type="text/javascript">
+        var nav = new DayPilot.Navigator("nav");
+        nav.selectMode = "month";
+        nav.showMonths = 3;
+        nav.skipMonths = 3;
+        nav.onTimeRangeSelected = function(args) {
+            loadTimeline(args.start);
+            loadReservations();
+        };
+        nav.init();
+    </script>
+
+    <!-- Scheduler setup -->
+    <script>
+        var dp = new DayPilot.Scheduler("dp");
+        var TimeZone = +8;
+        // view
+        dp.startDate = DayPilot.Date.today(); // or just dp.startDate = "2013-03-25";
+        dp.cellGroupBy = "Month";
+        dp.days = 7;
+        dp.cellDuration = 1440; // one day
+
+        dp.timeHeaders = [{
+            groupBy: "Day"
+        }, {
+            groupBy: "Cell"
+        }];
+        dp.scale = "Hour";
+
+        // bubble, sync loading
+        // see also DayPilot.Event.data.staticBubbleHTML property
+        dp.bubble = new DayPilot.Bubble();
+
+        /**
+         * Right Click Menu
+         */
+        dp.contextMenu = new DayPilot.Menu({
+            items: [{
+                text: "Edit",
+                onclick: function() {
+                    EventEditDetail(this.source);
+                }
+            }, {
+                text: "Show event ID",
+                onclick: function() {
+                    alert("Event value: " + this.source.data.id);
+                }
+            }, ]
+        });
+
+        dp.resources = [{
+            name: "Room A",
+            id: "A"
+        }, {
+            name: "Room B",
+            id: "B"
+        }, {
+            name: "Room C",
+            id: "C"
+        }, ];
+
+        // Load enable
+        dp.dynamicEventRendering = "Disabled";
+
+        dp.eventHoverHandling = "Bubble";
+        dp.onBeforeEventRender = function(args) {
+            args.e.bubbleHtml = args.e.start + " " + args.e.end;
+        };
+
+        /**
+         * Event show detail
+         */
+        //dp.eventClickHandling = "Select";
+        dp.onEventClicked = function(args) {
+            EventShowDetail(args);
+        };
+
+        /** 
+         * Event Creat Method
+         */
+        dp.timeRangeSelectingStartEndEnabled = true;
+        dp.onTimeRangeSelected = function(args) {
+            EventInsert(args);
+        };
+
+        /**
+         * Event Edit Method
+         */
+        dp.snapToGrid = false;
+        dp.useEventBoxes = "Never";
+        // event moving
+        dp.eventMovingStartEndEnabled = true;
+        dp.onEventMoving = function(args) {
+            var offset = args.start.getMinutes() % 60;
+            if (offset) {
+                args.start = args.start.addMinutes(-offset);
+                args.end = args.end.addMinutes(-offset);
+            }
+
+            args.left.enabled = true;
+            args.left.html = args.start.toString("h:mm tt");
+        };
+        dp.onEventMove = function(args) {
+            EventEditTimeOrRoom(args);
+        };
+        dp.onEventMoved = function(args) {
+            dp.message("Moved: " + args.e.text());
+        };
+        // event resizing
+        dp.eventResizingStartEndEnabled = true;
+        dp.onEventResizing = function(args) {
+            var offset_s = args.start.getMinutes() % 60;
+            var offset_e = args.end.getMinutes() % 60;
+            if (offset_s) {
+                args.start = args.start.addMinutes(-offset_s);
+                args.left.enabled = true;
+                args.left.html = args.start.toString("h:mm tt");
+            }
+            if (offset_e) {
+                args.end = args.end.addMinutes(60 - offset_e);
+                args.right.enabled = true;
+                args.right.html = args.start.toString("h:mm tt");
+            }
+        };
+        dp.onEventResize = function(args) {
+            EventEditTimeOrRoom(args);
+        };
+        dp.onEventResized = function(args) {
+            dp.message("Resized: " + args.e.text());
+            console.log(args.e);
+        };
+
+        /** 
+         * Event Delete Method
+         */
+        dp.eventDeleteHandling = "Update";
+        dp.onEventDelete = function(args) {
+            if (!confirm("Do you really want to delete this event?")) {
+                args.preventDefault();
+            }
+        };
+        dp.onEventDeleted = function(args) {
+            var request = GoogleDelete(args.e.data.id);
+            request.execute(function(e) {
+                appendPre("Event deleted");
+                dp.message("Deleted");
+            });
+        };
+
+        dp.onTimeHeaderClick = function(args) {
+            alert("clicked: " + args.header.start);
+        };
+        dp.cellWidth = 60;
+
+
+        dp.init();
+
+        dp.scrollTo(DayPilot.Date.today());
+    </script>
+    <script async defer src="https://apis.google.com/js/api.js" onload="this.onload=function(){};handleClientLoad()" onreadystatechange="if (this.readyState === 'complete') this.onload()">
+    </script>
 
 </body>
 
