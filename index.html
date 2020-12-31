@@ -689,8 +689,25 @@
                 var room = "Room: " + e.location + "\n";
                 var d = (e.description != null) ? e.description : null;
                 var description = "Description: " + d + "\n";
+                var member = "Members: ";
+                var member_email = "Member email:\n";
+                if(e.attendees.length > 1){
+                    for(var i = 1; i < e.attendees.length; i++){
+                        member += e.attendees[i].displayName;
+                        member_email += e.attendees[i].email + "\n";
+                        if(i + 1 != e.attendees.length){
+                            member += ", ";
+                        }
+                        else{
+                            member += "\n";
+                        }
+                    }
+                }
+                else{
+                    member += "\n";
+                }
 
-                var Detail = name + host + email + time + room + description;
+                var Detail = name + host + email + time + room + description + member + member_email;
                 alert(Detail);
             });
         }
