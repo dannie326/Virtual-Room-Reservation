@@ -155,12 +155,12 @@
     </div>
 
     <div class="main">
-
+        <!--
         <div style="width:220px; float:left;">
             <div id="nav"></div>
         </div>
-
-        <div style="margin-left: 220px;">
+        -->
+        <div style="margin-left: 0px;">
             <!--
             <div class="toolbar">
 
@@ -446,7 +446,7 @@
         function GoogleGetList(today) {
             var request = gapi.client.calendar.events.list({
                 'calendarId': 'primary',
-                'timeMin': (new Date()).toISOString()
+                'timeMin': (new Date(dp.startDate.getYear(),dp.startDate.getMonth(),dp.startDate.getDay())).toISOString()
             });
             return request;
         }
@@ -714,6 +714,7 @@
     </script>
 
     <!-- Nav setup -->
+    <!--
     <script type="text/javascript">
         var nav = new DayPilot.Navigator("nav");
         nav.selectMode = "month";
@@ -725,6 +726,7 @@
         };
         nav.init();
     </script>
+    -->
 
     <!-- Scheduler setup -->
     <script>
